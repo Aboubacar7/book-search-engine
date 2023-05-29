@@ -80,8 +80,8 @@ const SearchBooks = () => {
           },
         },
       });
-      
-      setSavedBookIds([...savedBookIds, data.saveBook.savedBooks[0].bookId]);
+
+      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     
     } catch (err) {
       console.error(err);

@@ -36,8 +36,8 @@ const resolvers = {
         console.log("login", user);
         const token = signToken(user);
         console.log(token)
-        //return { token, user };
-        return user;
+        return { token, user };
+        
       } catch (err) {
         console.log(err);
       }
