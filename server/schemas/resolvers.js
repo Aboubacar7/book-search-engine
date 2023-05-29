@@ -18,45 +18,54 @@ const resolvers = {
     addUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
+      console.log("signup", user);
       return { token, user };
     },
     loginUser: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
-      if (!user) {
-        throw new AuthenticationError("Incorrect email");
-      }
+      try {
+        const user = await User.findOne({ email });
+        if (!user) {
+          throw new AuthenticationError("Incorrect email");
+        }
 
-      const correctPw = await user.isCorrectPassword(password);
+        const correctPw = await user.isCorrectPassword(password);
 
-      if (!correctPw) {
-        throw new AuthenticationError("incorrect password");
+        if (!correctPw) {
+          throw new AuthenticationError("incorrect password");
+        }
+        console.log("login", user);
+        const token = signToken(user);
+        console.log(token)
+        //return { token, user };
+        return user;
+      } catch (err) {
+        console.log(err);
       }
-      const token = signToken(user);
-      return { token, user };
     },
 
     saveBook: async (parent, { bookData }, context) => {
-        if(context.user) {
-            const updatedUser = await User.findOneAndUpdate(
-                {_id: context.user._id},
-                {$push: {savedBooks: bookData}},
-                {new: true}
-            )
-            return updatedUser
-        }
-        throw new AuthenticationError('you need to be logged in')
+      console.log(bookData);
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $push: { savedBooks: bookData } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError("you need to be logged in");
     },
-    removeBook: async (parent, {bookId}, context) => {
-        if (context.user) {
-            const updatedUser = await User.findOneAndDelete(
-                {_id: context.user._id},
-                {$pull: { book: {_id: bookId }}},
-                {new: true}
-            )
-            return updatedUser
-        }
-        throw new AuthenticationError('book has not been removed')
-    }
+    removeBook: async (parent, { bookId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndDelete(
+          { _id: context.user._id },
+          { $pull: { book: { _id: bookId } } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError("book has not been removed");
+    },
   },
 };
 
