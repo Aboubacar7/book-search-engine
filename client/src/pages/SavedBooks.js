@@ -10,7 +10,7 @@ import { removeBookId } from "../utils/localStorage";
 const SavedBooks = () => {
   const { LOADING, data } = useQuery(QUERY_ME);
 
-  const userData = data?.me || [];
+  const userData = data?.me || {};
   const [removeBook] = useMutation(REMOVE_BOOK);
 
  
@@ -35,7 +35,9 @@ const SavedBooks = () => {
   // if data isn't here yet, say so
   if (LOADING) {
     return <h2> LOADING ...</h2>;
-  } 
+  } else{
+    console.log(data)
+  }
 
   return (
     <>
@@ -46,9 +48,9 @@ const SavedBooks = () => {
       </div>
       <Container>
         <h2 className="pt-5">
-          {userData.savedBooks.length
+          {userData.savedBooks?.length
             ? `Viewing ${userData.savedBooks.length} saved ${
-                userData.savedBooks?.length === 1 ? "book" : "books"
+                userData.savedBooks.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}
         </h2>
