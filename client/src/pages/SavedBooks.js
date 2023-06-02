@@ -23,8 +23,9 @@ const SavedBooks = () => {
     }
 
     try {
-      const { data } = await removeBook(bookId, token);
-      
+      const { data } = await removeBook({
+        variables: { bookId },
+      });
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -36,7 +37,7 @@ const SavedBooks = () => {
   if (LOADING) {
     return <h2> LOADING ...</h2>;
   } else{
-    console.log(data)
+    console.log(userData)
   }
 
   return (
